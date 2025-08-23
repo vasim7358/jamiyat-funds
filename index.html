@@ -1,68 +1,333 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Jamiyat Funds Collection</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jamiyat Funds Collection Kadegaon</title>
 <style>
-body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; background:#f6f7fb; margin:0; padding:24px; }
-.card { max-width:520px; margin:24px auto; background:#fff; padding:22px; border-radius:14px; box-shadow:0 10px 28px rgba(0,0,0,.06); }
-h1{ margin:0 0 8px; font-size:24px; }
-p.muted{ color:#6b7280; margin:0 0 18px; }
-label{ display:block; margin:12px 0 6px; font-weight:600; }
-input, textarea { width:100%; padding:12px 14px; border:1px solid #e5e7eb; border-radius:10px; outline:none; font-size:15px; }
-input:focus, textarea:focus { border-color:#6366f1; box-shadow:0 0 0 3px rgba(99,102,241,.15); }
-button{ margin-top:16px; padding:12px 16px; border:0; border-radius:10px; cursor:pointer; font-weight:700; background:#111827; color:#fff; width:100%; }
-.ok{ color:#065f46; }
-.err{ color:#991b1b; }
+  body {
+    font-family: Arial, sans-serif;
+    background: url("islamic-ramadan-celebration-lantern-fantasy-style.jpg") no-repeat center center fixed;
+    background-size: cover;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    color: white;
+  }
+  .container {
+    background: rgba(0, 0, 0, 0.8);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 10px rgba(0,0,0,0.5);
+    width: 95%;
+    max-width: 600px;
+    position: relative;
+  }
+  h2 { text-align: center; margin-bottom: 15px; color: #ffd700; }
+  label { display: block; margin: 8px 0 4px; }
+  input { width: 100%; padding: 8px; margin-bottom: 10px; border: none; border-radius: 6px; }
+  .row {
+    border: 1px solid #666;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.1);
+    position: relative;
+  }
+  .remove-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background-color: #ff4d4d;
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+    line-height: 28px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    transition: background 0.2s, transform 0.2s;
+  }
+  .remove-btn:hover { background-color: #cc0000; transform: scale(1.1); }
+  button { width: 100%; padding: 10px; margin-top: 10px; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; }
+  #addRowBtn { background: #ffc107; color: black; }
+  #addRowBtn:hover { background: #e0a800; }
+  #submitBtn { background: #28a745; color: white; }
+  #submitBtn:hover { background: #218838; }
+  .totals { margin-top: 15px; padding: 10px; background: rgba(255,255,255,0.1); border-radius: 8px; }
+  .totals p { margin: 5px 0; font-size: 16px; }
+  #mainPage { display: none; }
+  .menu-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 24px;
+    cursor: pointer;
+  }
+  .menu-dropdown {
+    position: absolute;
+    top: 45px;
+    right: 15px;
+    background: rgba(0,0,0,0.9);
+    border-radius: 6px;
+    display: none;
+    z-index: 10;
+  }
+  .menu-dropdown button {
+    width: 150px;
+    margin: 0;
+    border-radius: 0;
+    border-bottom: 1px solid #555;
+    background: none;
+    color: white;
+  }
+  .menu-dropdown button:last-child { border-bottom: none; }
+  .menu-dropdown button:hover { background: #333; }
 </style>
 </head>
 <body>
-<div class="card">
-<h1>Jamiyat Funds Collection</h1>
-<p class="muted">Record every 4th Friday collection (or any day). Data saves in Firebase in real-time.</p>
 
-
-<form id="fundForm">
-<label for="date">Date of Collection</label>
-<input id="date" type="date" required />
-
-
-<label for="amount">Amount Collected (₹)</label>
-<input id="amount" type="number" step="0.01" min="0" required />
-
-
-<label for="notes">Notes (optional)</label>
-<textarea id="notes" rows="2" placeholder="Masjid name / volunteers / remarks"></textarea>
-
-
-<button type="submit">Save Entry</button>
-</form>
-<p id="msg"></p>
-
-
-<p class="muted" style="margin-top:10px;">Need the records? Use <a href="export.html">Export CSV</a>.</p>
+<!-- Authentication Page -->
+<div class="container" id="authPage">
+  <h2>Login / Sign Up</h2>
+  <input type="email" id="email" placeholder="Email" required>
+  <input type="password" id="password" placeholder="Password" required>
+  <input type="password" id="refKey" placeholder="Reference Key" required>
+  <button id="loginBtn">Login</button>
+  <button id="signupBtn">Sign Up</button>
+  <p id="authMsg" style="color:#ffd700;text-align:center;"></p>
 </div>
 
+<!-- Main Page -->
+<div id="mainPage" class="container">
+  <span class="menu-btn">⋮</span>
+  <div class="menu-dropdown" id="menuDropdown">
+    <button id="menuDownload">Download CSV</button>
+    <button id="menuLogout">Logout</button>
+  </div>
 
-<!-- Firebase SDKs (v9 modular) -->
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
-import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+  <h2>Jamiyat Funds Collection Kadegaon</h2>
+  <form id="fundForm">
+    <div id="rows"></div>
+    <button type="button" id="addRowBtn">➕ Add Member</button>
+    <button type="submit" id="submitBtn">✅ Submit All</button>
+  </form>
+  <div class="totals">
+    <p><b>📅 This Month Collection:</b> <span id="monthTotal">0</span> ₹</p>
+    <p><b>💰 Jamiyat's Total Collection:</b> <span id="grandTotal">0</span> ₹</p>
+  </div>
+</div>
 
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
 
-// 1) Paste your Firebase web config here
-
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+<script>
 const firebaseConfig = {
   apiKey: "AIzaSyBelymTqSSpc6_WqTTIjdUSB4y4fyPalVQ",
   authDomain: "jamiyat-funds.firebaseapp.com",
+  databaseURL: "https://jamiyat-funds-default-rtdb.firebaseio.com",
   projectId: "jamiyat-funds",
   storageBucket: "jamiyat-funds.firebasestorage.app",
   messagingSenderId: "86627932910",
   appId: "1:86627932910:web:224ff0986be22b900531ff",
   measurementId: "G-KB7XEYP9PV"
 };
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+const authPage = document.getElementById('authPage');
+const mainPage = document.getElementById('mainPage');
+const emailInput = document.getElementById('email');
+const passwordInput = document.getElementById('password');
+const refKeyInput = document.getElementById('refKey');
+const authMsg = document.getElementById('authMsg');
+
+const loginBtn = document.getElementById('loginBtn');
+const signupBtn = document.getElementById('signupBtn');
+
+const REFERENCE_KEY = "masjid@786";
+const CSV_PASSWORD = "jama@0078";
+
+// Persistent login
+firebase.auth().onAuthStateChanged(user => {
+  if(user) { showMainPage(); }
+});
+
+// Sign up
+signupBtn.onclick = () => {
+  const email = emailInput.value;
+  const password = passwordInput.value;
+  const refKey = refKeyInput.value;
+  if(refKey !== REFERENCE_KEY){ authMsg.textContent = "❌ Incorrect Reference Key"; return; }
+  firebase.auth().createUserWithEmailAndPassword(email, password)
+    .then(() => { authMsg.textContent = "✅ Sign Up successful. You can login now."; })
+    .catch(err => { authMsg.textContent = err.message; });
+};
+
+// Login
+loginBtn.onclick = () => {
+  const email = emailInput.value;
+  const password = passwordInput.value;
+  firebase.auth().signInWithEmailAndPassword(email, password)
+    .then(() => { showMainPage(); })
+    .catch(err => { authMsg.textContent = err.message; });
+};
+
+// Show main page
+function showMainPage(){
+  authPage.style.display = 'none';
+  mainPage.style.display = 'block';
+  initMainPage();
+}
+
+// Logout & menu toggle
+const menuBtn = document.querySelector('.menu-btn');
+const menuDropdown = document.getElementById('menuDropdown');
+menuBtn.onclick = ()=> menuDropdown.style.display = menuDropdown.style.display==='block'?'none':'block';
+document.getElementById('menuLogout').onclick = ()=> {
+  firebase.auth().signOut().then(()=>{ localStorage.removeItem('user'); location.reload(); });
+};
+document.getElementById('menuDownload').onclick = ()=> downloadCsvPrompt();
+
+// Initialize main page
+function initMainPage(){
+  const rowsContainer = document.getElementById('rows');
+  const form = document.getElementById('fundForm');
+  const monthTotalEl = document.getElementById('monthTotal');
+  const grandTotalEl = document.getElementById('grandTotal');
+
+  function addRow() {
+    const div = document.createElement('div');
+    div.classList.add('row');
+    div.innerHTML = `
+      <label>Date:</label><input type="date" class="date" required>
+      <label>Member Name:</label><input type="text" class="member" required>
+      <label>Amount:</label><input type="number" class="amount" required>
+      <label>Receiver:</label><input type="text" class="receiver" required>
+      <button type="button" class="remove-btn" onclick="removeRow(this)">×</button>
+    `;
+    rowsContainer.appendChild(div);
+  }
+
+  document.getElementById('addRowBtn').addEventListener('click', addRow);
+  addRow(); // first row
+
+  window.removeRow = function(button){ button.parentElement.remove(); };
+
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const rows = document.querySelectorAll('.row');
+    rows.forEach(row => {
+      const date = row.querySelector('.date').value;
+      const member = row.querySelector('.member').value;
+      const amount = row.querySelector('.amount').value;
+      const receiver = row.querySelector('.receiver').value;
+      db.ref('funds').push({ date, member, amount, receiver });
+    });
+    alert('✅ All data saved successfully!');
+    rowsContainer.innerHTML = '';
+    addRow();
+    updateTotals();
+  });
+
+  function updateTotals() {
+    db.ref('funds').once('value', snapshot => {
+      const data = snapshot.val();
+      if (!data) return;
+      let grandTotal = 0, monthTotal = 0;
+      const now = new Date();
+      const thisMonth = now.getMonth() + 1;
+      const thisYear = now.getFullYear();
+      for (let key in data) {
+        const row = data[key];
+        const amount = parseFloat(row.amount) || 0;
+        grandTotal += amount;
+        const d = new Date(row.date);
+        if (d.getMonth() + 1 === thisMonth && d.getFullYear() === thisYear) monthTotal += amount;
+      }
+      monthTotalEl.textContent = monthTotal;
+      grandTotalEl.textContent = grandTotal;
+    });
+  }
+
+  updateTotals();
+}
+
+// CSV download with password modal
+function downloadCsvPrompt(){
+  const modal = document.createElement('div');
+  modal.style.position='fixed';
+  modal.style.top='0'; modal.style.left='0';
+  modal.style.width='100%'; modal.style.height='100%';
+  modal.style.background='rgba(0,0,0,0.7)';
+  modal.style.display='flex'; modal.style.justifyContent='center'; modal.style.alignItems='center';
+  modal.style.zIndex='1000';
   
+  const box = document.createElement('div');
+  box.style.background='rgba(0,0,0,0.9)';
+  box.style.padding='20px'; box.style.borderRadius='10px'; box.style.textAlign='center'; box.style.width='300px';
+  box.innerHTML = `
+    <span id="closeCsvModal" style="position:absolute;top:5px;right:10px;cursor:pointer;font-size:20px;color:white;">×</span>
+    <p style="color:white;">Enter CSV Password:</p>
+    <input type="password" id="csvPassInput" style="width:80%;padding:8px;border-radius:6px;border:none;"><br><br>
+    <input type="checkbox" id="showCsvPass"> <span style="color:white;">Show Password</span><br><br>
+    <button id="submitCsvPass" style="padding:8px 15px;border-radius:6px;border:none;cursor:pointer;">Submit</button>
+  `;
+  modal.appendChild(box);
+  document.body.appendChild(modal);
+
+  box.querySelector('#showCsvPass').onchange = function(){ 
+    box.querySelector('#csvPassInput').type = this.checked ? 'text' : 'password'; 
+  };
+
+  box.querySelector('#closeCsvModal').onclick = () => document.body.removeChild(modal);
+  modal.onclick = e => { if(e.target===modal) document.body.removeChild(modal); };
+
+  box.querySelector('#submitCsvPass').onclick = function(){
+    const pass = box.querySelector('#csvPassInput').value;
+    if(pass !== CSV_PASSWORD){ alert("❌ Incorrect CSV password"); return; }
+
+    db.ref('funds').once('value', snapshot=>{
+      const data = snapshot.val();
+      if(!data){ alert("No records found."); return; }
+
+      let csv="ID,DATE,MEMBER,AMOUNT,RECEIVER\n";
+      let id=1, grandTotal=0, monthTotal=0;
+      const now = new Date();
+      const thisMonth = now.getMonth()+1, thisYear = now.getFullYear();
+      for(let key in data){
+        const row = data[key];
+        csv += `${id},${row.date},${row.member},${row.amount},${row.receiver}\n`;
+        grandTotal += parseFloat(row.amount) || 0;
+        const d = new Date(row.date);
+        if(d.getMonth()+1 === thisMonth && d.getFullYear() === thisYear) monthTotal += parseFloat(row.amount) || 0;
+        id++;
+      }
+      csv += `\nThis Month (${now.toLocaleString('default',{month:'long'})}) Total:,${monthTotal}\n`;
+      csv += `Grand Total:,${grandTotal}\n`;
+
+      const blob = new Blob([csv], {type:'text/csv'});
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.setAttribute('hidden','');
+      a.setAttribute('href',url);
+      a.setAttribute('download','jamiyat_funds.csv');
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      document.body.removeChild(modal);
+    });
+  };
+}
+</script>
+</body>
 </html>
