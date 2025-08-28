@@ -64,6 +64,8 @@
   .totals { margin-top: 15px; padding: 10px; background: rgba(255,255,255,0.1); border-radius: 8px; }
   .totals p { margin: 5px 0; font-size: 16px; }
   #mainPage { display: none; }
+
+  /* Menu Dropdown */
   .menu-btn {
     position: absolute;
     top: 15px;
@@ -78,6 +80,7 @@
     background: rgba(0,0,0,0.9);
     border-radius: 6px;
     display: none;
+    flex-direction: column;
     z-index: 10;
   }
   .menu-dropdown button {
@@ -87,9 +90,30 @@
     border-bottom: 1px solid #555;
     background: none;
     color: white;
+    text-align: left;
+    padding: 10px;
   }
   .menu-dropdown button:last-child { border-bottom: none; }
   .menu-dropdown button:hover { background: #333; }
+
+  /* Committee Modal */
+  #committeeModal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.8);
+    justify-content: center; 
+    align-items: center;
+    z-index: 2000;
+  }
+  #committeeBox {
+    background: #111; padding: 20px; border-radius: 10px; width: 350px; color: white;
+  }
+  #committeeBox h3 { text-align:center; color:#ffd700; margin-bottom:15px; }
+  #committeeBox ul { list-style:none; padding:0; }
+  #committeeBox li { margin:8px 0; }
+  #closeCommittee { float:right; cursor:pointer; font-size:20px; color:red; }
 </style>
 </head>
 <body>
@@ -109,7 +133,9 @@
 <div id="mainPage" class="container">
   <span class="menu-btn">⋮</span>
   <div class="menu-dropdown" id="menuDropdown">
-    <button id="menuDownload">Download CSV</button>
+    <button id="menuDownloadCSV">Download CSV</button>
+    <button id="menuDownloadPDF">Download PDF</button>
+    <button id="menuCommittee">Committee</button>
     <button id="menuLogout">Logout</button>
   </div>
 
@@ -125,10 +151,29 @@
   </div>
 </div>
 
+<!-- Committee Modal -->
+<div id="committeeModal">
+  <div id="committeeBox">
+    <span id="closeCommittee">×</span>
+    <h3>Jamiyat Committee</h3>
+    <ul>
+      <li>1. Sadar – Hafiz Javed</li>
+      <li>2. Na.Sadar – Hafiz Azam</li>
+      <li>3. Na.Sadar – Anis shaha</li>
+      <li>4. Nazim –Kausar baig</li>
+      <li>5. Na.Nazim – Asif molana</li>
+      <li>6. Na.Nazim – Vasim mirza</li>
+      <li>7. Khajanchi – Shahabaz khan</li>
+      <li>8. Khajanchi – Ansar shaha</li>
+    </ul>
+  </div>
+</div>
+
 <!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <script>
 const firebaseConfig = {
@@ -158,57 +203,67 @@ const REFERENCE_KEY = "masjid@786";
 const CSV_PASSWORD = "jama@0078";
 
 // Persistent login
-firebase.auth().onAuthStateChanged(user => {
-  if(user) { showMainPage(); }
-});
+firebase.auth().onAuthStateChanged(user => { if(user) showMainPage(); });
 
 // Sign up
 signupBtn.onclick = () => {
   const email = emailInput.value;
   const password = passwordInput.value;
   const refKey = refKeyInput.value;
-  if(refKey !== REFERENCE_KEY){ authMsg.textContent = "❌ Incorrect Reference Key"; return; }
-  firebase.auth().createUserWithEmailAndPassword(email, password)
-    .then(() => { authMsg.textContent = "✅ Sign Up successful. You can login now."; })
-    .catch(err => { authMsg.textContent = err.message; });
+  if(refKey!==REFERENCE_KEY){ authMsg.textContent="❌ Incorrect Reference Key"; return; }
+  firebase.auth().createUserWithEmailAndPassword(email,password)
+    .then(()=>{ authMsg.textContent="✅ Sign Up successful. You can login now."; })
+    .catch(err=>{ authMsg.textContent=err.message; });
 };
 
 // Login
 loginBtn.onclick = () => {
-  const email = emailInput.value;
-  const password = passwordInput.value;
-  firebase.auth().signInWithEmailAndPassword(email, password)
-    .then(() => { showMainPage(); })
-    .catch(err => { authMsg.textContent = err.message; });
+  const email=emailInput.value;
+  const password=passwordInput.value;
+  firebase.auth().signInWithEmailAndPassword(email,password)
+    .then(()=>{ showMainPage(); })
+    .catch(err=>{ authMsg.textContent=err.message; });
 };
 
 // Show main page
 function showMainPage(){
-  authPage.style.display = 'none';
-  mainPage.style.display = 'block';
+  authPage.style.display='none';
+  mainPage.style.display='block';
   initMainPage();
 }
 
-// Logout & menu toggle
-const menuBtn = document.querySelector('.menu-btn');
-const menuDropdown = document.getElementById('menuDropdown');
-menuBtn.onclick = ()=> menuDropdown.style.display = menuDropdown.style.display==='block'?'none':'block';
-document.getElementById('menuLogout').onclick = ()=> {
+// Menu toggle & outside click
+const menuBtn=document.querySelector('.menu-btn');
+const menuDropdown=document.getElementById('menuDropdown');
+menuBtn.onclick=()=>{ menuDropdown.style.display=menuDropdown.style.display==='flex'?'none':'flex'; };
+window.addEventListener("click",function(e){
+  if(menuDropdown.style.display==="flex" && !menuDropdown.contains(e.target) && e.target!==menuBtn){
+    menuDropdown.style.display="none";
+  }
+});
+
+// Committee modal toggle
+document.getElementById('menuCommittee').onclick=()=> document.getElementById('committeeModal').style.display="flex";
+document.getElementById('closeCommittee').onclick=()=> document.getElementById('committeeModal').style.display="none";
+
+// Logout & downloads
+document.getElementById('menuLogout').onclick=()=> {
   firebase.auth().signOut().then(()=>{ localStorage.removeItem('user'); location.reload(); });
 };
-document.getElementById('menuDownload').onclick = ()=> downloadCsvPrompt();
+document.getElementById('menuDownloadCSV').onclick=()=> downloadCsvPrompt();
+document.getElementById('menuDownloadPDF').onclick=()=> downloadPdf();
 
 // Initialize main page
 function initMainPage(){
-  const rowsContainer = document.getElementById('rows');
-  const form = document.getElementById('fundForm');
-  const monthTotalEl = document.getElementById('monthTotal');
-  const grandTotalEl = document.getElementById('grandTotal');
+  const rowsContainer=document.getElementById('rows');
+  const form=document.getElementById('fundForm');
+  const monthTotalEl=document.getElementById('monthTotal');
+  const grandTotalEl=document.getElementById('grandTotal');
 
-  function addRow() {
-    const div = document.createElement('div');
+  function addRow(){
+    const div=document.createElement('div');
     div.classList.add('row');
-    div.innerHTML = `
+    div.innerHTML=`
       <label>Date:</label><input type="date" class="date" required>
       <label>Member Name:</label><input type="text" class="member" required>
       <label>Amount:</label><input type="number" class="amount" required>
@@ -217,116 +272,139 @@ function initMainPage(){
     `;
     rowsContainer.appendChild(div);
   }
-
   document.getElementById('addRowBtn').addEventListener('click', addRow);
-  addRow(); // first row
+  addRow();
+  window.removeRow=function(button){ button.parentElement.remove(); };
 
-  window.removeRow = function(button){ button.parentElement.remove(); };
-
-  form.addEventListener('submit', function(e) {
+  form.addEventListener('submit',function(e){
     e.preventDefault();
-    const rows = document.querySelectorAll('.row');
-    rows.forEach(row => {
-      const date = row.querySelector('.date').value;
-      const member = row.querySelector('.member').value;
-      const amount = row.querySelector('.amount').value;
-      const receiver = row.querySelector('.receiver').value;
-      db.ref('funds').push({ date, member, amount, receiver });
+    const rows=document.querySelectorAll('.row');
+    rows.forEach(row=>{
+      const date=row.querySelector('.date').value;
+      const member=row.querySelector('.member').value;
+      const amount=row.querySelector('.amount').value;
+      const receiver=row.querySelector('.receiver').value;
+      db.ref('funds').push({date, member, amount, receiver});
     });
     alert('✅ All data saved successfully!');
-    rowsContainer.innerHTML = '';
+    rowsContainer.innerHTML='';
     addRow();
     updateTotals();
   });
 
-  function updateTotals() {
-    db.ref('funds').once('value', snapshot => {
-      const data = snapshot.val();
-      if (!data) return;
-      let grandTotal = 0, monthTotal = 0;
-      const now = new Date();
-      const thisMonth = now.getMonth() + 1;
-      const thisYear = now.getFullYear();
-      for (let key in data) {
-        const row = data[key];
-        const amount = parseFloat(row.amount) || 0;
-        grandTotal += amount;
-        const d = new Date(row.date);
-        if (d.getMonth() + 1 === thisMonth && d.getFullYear() === thisYear) monthTotal += amount;
+  function updateTotals(){
+    db.ref('funds').once('value',snapshot=>{
+      const data=snapshot.val();
+      if(!data) return;
+      let grandTotal=0, monthTotal=0;
+      const now=new Date();
+      const thisMonth=now.getMonth()+1;
+      const thisYear=now.getFullYear();
+      for(let key in data){
+        const row=data[key];
+        const amount=parseFloat(row.amount)||0;
+        grandTotal+=amount;
+        const d=new Date(row.date);
+        if(d.getMonth()+1===thisMonth && d.getFullYear()===thisYear) monthTotal+=amount;
       }
-      monthTotalEl.textContent = monthTotal;
-      grandTotalEl.textContent = grandTotal;
+      monthTotalEl.textContent=monthTotal;
+      grandTotalEl.textContent=grandTotal;
     });
   }
 
   updateTotals();
 }
 
-// CSV download with password modal
+// CSV download with password
 function downloadCsvPrompt(){
-  const modal = document.createElement('div');
-  modal.style.position='fixed';
-  modal.style.top='0'; modal.style.left='0';
-  modal.style.width='100%'; modal.style.height='100%';
-  modal.style.background='rgba(0,0,0,0.7)';
-  modal.style.display='flex'; modal.style.justifyContent='center'; modal.style.alignItems='center';
-  modal.style.zIndex='1000';
-  
-  const box = document.createElement('div');
-  box.style.background='rgba(0,0,0,0.9)';
-  box.style.padding='20px'; box.style.borderRadius='10px'; box.style.textAlign='center'; box.style.width='300px';
-  box.innerHTML = `
-    <span id="closeCsvModal" style="position:absolute;top:5px;right:10px;cursor:pointer;font-size:20px;color:white;">×</span>
-    <p style="color:white;">Enter CSV Password:</p>
-    <input type="password" id="csvPassInput" style="width:80%;padding:8px;border-radius:6px;border:none;"><br><br>
-    <input type="checkbox" id="showCsvPass"> <span style="color:white;">Show Password</span><br><br>
-    <button id="submitCsvPass" style="padding:8px 15px;border-radius:6px;border:none;cursor:pointer;">Submit</button>
-  `;
-  modal.appendChild(box);
-  document.body.appendChild(modal);
+  const pwd=prompt("Enter password to download CSV:");
+  if(pwd!==CSV_PASSWORD){ alert("❌ Incorrect password"); return; }
 
-  box.querySelector('#showCsvPass').onchange = function(){ 
-    box.querySelector('#csvPassInput').type = this.checked ? 'text' : 'password'; 
-  };
+  db.ref('funds').once('value',snapshot=>{
+    const data=snapshot.val();
+    if(!data){ alert("No records found."); return; }
+    let csv="ID,DATE,MEMBER,AMOUNT,RECEIVER\n";
+    let id=1, grandTotal=0;
+    for(let key in data){
+      const row=data[key];
+      csv+=`${id},${row.date},${row.member},${row.amount},${row.receiver}\n`;
+      grandTotal+=parseFloat(row.amount)||0;
+      id++;
+    }
+    csv+=`Grand Total:,${grandTotal}\n`;
+    const blob=new Blob([csv],{type:'text/csv'});
+    const url=window.URL.createObjectURL(blob);
+    const a=document.createElement('a'); a.href=url; a.download='jamiyat_funds.csv';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  });
+}
 
-  box.querySelector('#closeCsvModal').onclick = () => document.body.removeChild(modal);
-  modal.onclick = e => { if(e.target===modal) document.body.removeChild(modal); };
+// PDF download with password & proper table
+function downloadPdf(){
+  const pwd=prompt("Enter password to download PDF:");
+  if(pwd!==CSV_PASSWORD){ alert("❌ Incorrect password"); return; }
 
-  box.querySelector('#submitCsvPass').onclick = function(){
-    const pass = box.querySelector('#csvPassInput').value;
-    if(pass !== CSV_PASSWORD){ alert("❌ Incorrect CSV password"); return; }
+  db.ref('funds').once('value',snapshot=>{
+    const data=snapshot.val();
+    if(!data){ alert("No records found."); return; }
 
-    db.ref('funds').once('value', snapshot=>{
-      const data = snapshot.val();
-      if(!data){ alert("No records found."); return; }
+    const div=document.createElement('div');
+    div.style.padding="20px";
+    div.style.fontSize="14px";
+    div.style.color="#000";
+    div.style.background="#fff";
 
-      let csv="ID,DATE,MEMBER,AMOUNT,RECEIVER\n";
-      let id=1, grandTotal=0, monthTotal=0;
-      const now = new Date();
-      const thisMonth = now.getMonth()+1, thisYear = now.getFullYear();
-      for(let key in data){
-        const row = data[key];
-        csv += `${id},${row.date},${row.member},${row.amount},${row.receiver}\n`;
-        grandTotal += parseFloat(row.amount) || 0;
-        const d = new Date(row.date);
-        if(d.getMonth()+1 === thisMonth && d.getFullYear() === thisYear) monthTotal += parseFloat(row.amount) || 0;
-        id++;
-      }
-      csv += `\nThis Month (${now.toLocaleString('default',{month:'long'})}) Total:,${monthTotal}\n`;
-      csv += `Grand Total:,${grandTotal}\n`;
+    const title=document.createElement('h3');
+    title.innerText="Jamiyat Funds Collection";
+    title.style.textAlign="center";
+    div.appendChild(title);
 
-      const blob = new Blob([csv], {type:'text/csv'});
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.setAttribute('hidden','');
-      a.setAttribute('href',url);
-      a.setAttribute('download','jamiyat_funds.csv');
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      document.body.removeChild(modal);
+    const table=document.createElement('table');
+    table.style.width="100%";
+    table.style.borderCollapse="collapse";
+    table.style.marginTop="10px";
+
+    const headerRow=document.createElement('tr');
+    ["ID","Date","Member","Amount","Receiver"].forEach(h=>{
+      const th=document.createElement('th');
+      th.innerText=h;
+      th.style.border="1px solid #000";
+      th.style.padding="5px";
+      th.style.background="#ffd700";
+      headerRow.appendChild(th);
     });
-  };
+    table.appendChild(headerRow);
+
+    let id=1, total=0;
+    for(let key in data){
+      const row=data[key];
+      const tr=document.createElement('tr');
+      [id,row.date,row.member,row.amount,row.receiver].forEach(val=>{
+        const td=document.createElement('td');
+        td.innerText=val;
+        td.style.border="1px solid #000";
+        td.style.padding="5px";
+        tr.appendChild(td);
+      });
+      total+=parseFloat(row.amount)||0;
+      table.appendChild(tr);
+      id++;
+    }
+
+    const trTotal=document.createElement('tr');
+    ["","","Total",total,""].forEach(val=>{
+      const td=document.createElement('td');
+      td.innerText=val;
+      td.style.border="1px solid #000";
+      td.style.fontWeight=(val==="Total" || val===total)?"bold":"normal";
+      td.style.padding="5px";
+      trTotal.appendChild(td);
+    });
+    table.appendChild(trTotal);
+    div.appendChild(table);
+
+    html2pdf().from(div).save("jamiyat_funds.pdf");
+  });
 }
 </script>
 </body>
