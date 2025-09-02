@@ -3,129 +3,66 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Jamiyat Funds Collection Kadegaon</title>
+<title>Jamiat Funds Kadegaon</title>
 <style>
   body {
-    font-family: Arial, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: url("islamic-ramadan-celebration-lantern-fantasy-style.jpg") no-repeat center center fixed;
     background-size: cover;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    color: white;
+    margin: 0; padding: 0;
+    display: flex; justify-content: center; align-items: center;
+    min-height: 100vh; color: white;
   }
   .container {
-    background: rgba(0, 0, 0, 0.8);
-    padding: 20px;
+    background: rgba(0, 0, 0, 0.85);
+    padding: 25px;
     border-radius: 12px;
-    box-shadow: 0px 4px 10px rgba(0,0,0,0.5);
-    width: 95%;
-    max-width: 600px;
-    position: relative;
+    box-shadow: 0px 6px 20px rgba(0,0,0,0.6);
+    width: 95%; max-width: 650px; position: relative;
   }
   h2 { text-align: center; margin-bottom: 15px; color: #ffd700; }
-  label { display: block; margin: 8px 0 4px; }
-  input { width: 100%; padding: 8px; margin-bottom: 10px; border: none; border-radius: 6px; }
-  .row {
-    border: 1px solid #666;
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 8px;
-    background: rgba(255,255,255,0.1);
-    position: relative;
-  }
-  .remove-btn {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    background-color: #ff4d4d;
-    color: white;
-    font-weight: bold;
-    font-size: 18px;
-    border: none;
-    cursor: pointer;
-    text-align: center;
-    line-height: 28px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-    transition: background 0.2s, transform 0.2s;
-  }
+  label { display: block; margin: 8px 0 4px; font-weight: 500; }
+  input { width: 100%; padding: 10px; margin-bottom: 10px; border: none; border-radius: 6px; }
+  .row { border-radius: 10px; background: rgba(255,255,255,0.1); margin-bottom: 10px; padding: 15px; position: relative; box-shadow: 0 2px 6px rgba(0,0,0,0.3); transform: translateY(-10px); opacity: 0; animation: slideFade 0.3s forwards; }
+  @keyframes slideFade { to { transform: translateY(0); opacity: 1; } }
+  .remove-btn { position: absolute; top: 8px; right: 8px; width: 28px; height: 28px; border-radius: 50%; background-color: #ff4d4d; color: white; font-weight: bold; font-size: 18px; border: none; cursor: pointer; text-align: center; line-height: 28px; box-shadow: 0 2px 4px rgba(0,0,0,0.3); transition: background 0.2s, transform 0.2s; }
   .remove-btn:hover { background-color: #cc0000; transform: scale(1.1); }
   button { width: 100%; padding: 10px; margin-top: 10px; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; }
-  #addRowBtn { background: #ffc107; color: black; }
-  #addRowBtn:hover { background: #e0a800; }
+  .add-btn { background: #ffc107; color: black; }
+  .add-btn:hover { background: #e0a800; }
   #submitBtn { background: #28a745; color: white; }
   #submitBtn:hover { background: #218838; }
-  .totals { margin-top: 15px; padding: 10px; background: rgba(255,255,255,0.1); border-radius: 8px; }
-  .totals p { margin: 5px 0; font-size: 16px; }
+  .totals { margin-top: 20px; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 10px; }
+  .totals p { margin: 6px 0; font-size: 16px; font-weight: 500; }
   #mainPage { display: none; }
-
-  /* Menu Dropdown */
-  .menu-btn {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    font-size: 24px;
-    cursor: pointer;
-  }
-  .menu-dropdown {
-    position: absolute;
-    top: 45px;
-    right: 15px;
-    background: rgba(0,0,0,0.9);
-    border-radius: 6px;
-    display: none;
-    flex-direction: column;
-    z-index: 10;
-  }
-  .menu-dropdown button {
-    width: 150px;
-    margin: 0;
-    border-radius: 0;
-    border-bottom: 1px solid #555;
-    background: none;
-    color: white;
-    text-align: left;
-    padding: 10px;
-  }
+  .menu-btn { position: absolute; top: 15px; right: 15px; font-size: 26px; cursor: pointer; }
+  .menu-dropdown { position: absolute; top: 50px; right: 15px; background: rgba(0,0,0,0.95); border-radius: 6px; display: none; flex-direction: column; z-index: 10; }
+  .menu-dropdown button { width: 180px; margin: 0; border-radius: 0; border-bottom: 1px solid #555; background: none; color: white; text-align: left; padding: 10px; }
   .menu-dropdown button:last-child { border-bottom: none; }
   .menu-dropdown button:hover { background: #333; }
-
-  /* Committee Modal */
-  #committeeModal {
-    display: none;
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: rgba(0,0,0,0.8);
-    justify-content: center; 
-    align-items: center;
-    z-index: 2000;
+  .tab-buttons { display: flex; margin-bottom: 10px; }
+  .tab-buttons button { flex: 1; margin-right: 5px; background: #17a2b8; color: white; }
+  .tab-buttons button:last-child { margin-right: 0; }
+  .tab-buttons button.active { background: #28a745; } 
+  @media (max-width: 480px) {
+    .tab-buttons { flex-wrap: wrap; }
+    .tab-buttons button { margin-bottom: 5px; }
+    .menu-dropdown { width: 90vw; right: 5vw; }
+    .row input { font-size: 14px; padding: 8px; }
+    #fundForm button { font-size: 14px; padding: 8px; }
+    .totals p { font-size: 14px; }
   }
-  #committeeBox {
-    background: #111; padding: 20px; border-radius: 10px; width: 350px; color: white;
-  }
-  #committeeBox h3 { text-align:center; color:#ffd700; margin-bottom:15px; }
-  #committeeBox ul { list-style:none; padding:0; }
-  #committeeBox li { margin:8px 0; }
-  #closeCommittee { float:right; cursor:pointer; font-size:20px; color:red; }
 </style>
 </head>
 <body>
 
 <!-- Authentication Page -->
 <div class="container" id="authPage">
-  <h2>Login / Sign Up</h2>
+  <h2>Login</h2>
   <input type="email" id="email" placeholder="Email" required>
   <input type="password" id="password" placeholder="Password" required>
   <input type="password" id="refKey" placeholder="Reference Key" required>
   <button id="loginBtn">Login</button>
-  <button id="signupBtn">Sign Up</button>
   <p id="authMsg" style="color:#ffd700;text-align:center;"></p>
 </div>
 
@@ -139,43 +76,52 @@
     <button id="menuLogout">Logout</button>
   </div>
 
-  <h2>Jamiyat Funds Collection Kadegaon</h2>
+  <h2>Jamiat Funds Kadegaon</h2>
+
+  <div class="tab-buttons">
+    <button id="tabMember">Add Member</button>
+    <button id="tabExpense">Add Expense</button>
+  </div>
+
   <form id="fundForm">
     <div id="rows"></div>
-    <button type="button" id="addRowBtn">➕ Add Member</button>
+    <button type="button" id="addRowBtn" class="add-btn">➕ Add Row</button>
     <button type="submit" id="submitBtn">✅ Submit All</button>
   </form>
+
   <div class="totals">
-    <p><b>📅 This Month Collection:</b> <span id="monthTotal">0</span> ₹</p>
-    <p><b>💰 Jamiyat's Total Collection:</b> <span id="grandTotal">0</span> ₹</p>
+    <p>📅 This Month Collection: <span id="monthTotal">0</span> ₹</p>
+    <p>💰 Jamiat's Total Collection: <span id="grandTotal">0</span> ₹</p>
+    <p>🧾 Total Expenses: <span id="totalExpenses">0</span> ₹</p>
+    <p>🏦 Current Jamiat Funds: <span id="currentFunds">0</span> ₹</p>
   </div>
 </div>
 
 <!-- Committee Modal -->
-<div id="committeeModal">
-  <div id="committeeBox">
-    <span id="closeCommittee">×</span>
-    <h3>Jamiyat Committee</h3>
-    <ul>
-      <li>1. Sadar – Hafiz Javed</li>
-      <li>2. Na.Sadar – Hafiz Azam</li>
-      <li>3. Na.Sadar – Anis shaha</li>
-      <li>4. Nazim –Kausar baig</li>
-      <li>5. Na.Nazim – Asif molana</li>
-      <li>6. Na.Nazim – Vasim mirza</li>
-      <li>7. Khajanchi – Shahabaz khan</li>
-      <li>8. Khajanchi – Ansar shaha</li>
+<div id="committeeModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);justify-content:center;align-items:center;z-index:999;">
+  <div style="background:#000;color:#fff;padding:20px;border-radius:10px;max-width:400px;width:90%;position:relative;">
+    <span id="closeCommittee" style="position:absolute;top:10px;right:15px;cursor:pointer;font-size:22px;">×</span>
+    <h3 style="text-align:center;color:#ffd700;">Jamiyat Committee</h3>
+    <ul style="line-height:1.6;">
+      <li>1. Sadar – Hafiz Javed shaha</li>
+      <li>2. Na.Sadar – Hafiz Azam khan</li>
+      <li>3. Na.Sadar – Anis Shaha</li>
+      <li>4. Nazim – Kausar Baig</li>
+      <li>5. Na.Nazim – Asif Molana</li>
+      <li>6. Na.Nazim – Vasim Mirza</li>
+      <li>7. Khajanchi – Shahabaz Khan</li>
+      <li>8. Khajanchi – Ansar Shaha</li>
     </ul>
   </div>
 </div>
 
-<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <script>
+// Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyBelymTqSSpc6_WqTTIjdUSB4y4fyPalVQ",
   authDomain: "jamiyat-funds.firebaseapp.com",
@@ -195,216 +141,277 @@ const emailInput = document.getElementById('email');
 const passwordInput = document.getElementById('password');
 const refKeyInput = document.getElementById('refKey');
 const authMsg = document.getElementById('authMsg');
-
 const loginBtn = document.getElementById('loginBtn');
-const signupBtn = document.getElementById('signupBtn');
-
 const REFERENCE_KEY = "masjid@786";
 const CSV_PASSWORD = "jama@0078";
 
-// Persistent login
 firebase.auth().onAuthStateChanged(user => { if(user) showMainPage(); });
 
-// Sign up
-signupBtn.onclick = () => {
-  const email = emailInput.value;
-  const password = passwordInput.value;
-  const refKey = refKeyInput.value;
-  if(refKey!==REFERENCE_KEY){ authMsg.textContent="❌ Incorrect Reference Key"; return; }
-  firebase.auth().createUserWithEmailAndPassword(email,password)
-    .then(()=>{ authMsg.textContent="✅ Sign Up successful. You can login now."; })
-    .catch(err=>{ authMsg.textContent=err.message; });
-};
-
-// Login
 loginBtn.onclick = () => {
-  const email=emailInput.value;
-  const password=passwordInput.value;
+  const email=emailInput.value; const password=passwordInput.value; const refKey = refKeyInput.value;
+  if(refKey!==REFERENCE_KEY){ authMsg.textContent="❌ Incorrect Reference Key"; return; }
   firebase.auth().signInWithEmailAndPassword(email,password)
     .then(()=>{ showMainPage(); })
     .catch(err=>{ authMsg.textContent=err.message; });
 };
 
-// Show main page
 function showMainPage(){
-  authPage.style.display='none';
-  mainPage.style.display='block';
-  initMainPage();
+  authPage.style.display='none'; mainPage.style.display='block'; initMainPage();
 }
 
-// Menu toggle & outside click
-const menuBtn=document.querySelector('.menu-btn');
+// Menu
+const menuBtn=document.querySelector('.menu-btn'); 
 const menuDropdown=document.getElementById('menuDropdown');
 menuBtn.onclick=()=>{ menuDropdown.style.display=menuDropdown.style.display==='flex'?'none':'flex'; };
-window.addEventListener("click",function(e){
-  if(menuDropdown.style.display==="flex" && !menuDropdown.contains(e.target) && e.target!==menuBtn){
-    menuDropdown.style.display="none";
-  }
-});
+window.addEventListener("click",e=>{ if(menuDropdown.style.display==="flex" && !menuDropdown.contains(e.target) && e.target!==menuBtn){ menuDropdown.style.display="none"; }});
+document.getElementById('menuLogout').onclick=()=> { firebase.auth().signOut().then(()=>{ location.reload(); }); };
 
-// Committee modal toggle
-document.getElementById('menuCommittee').onclick=()=> document.getElementById('committeeModal').style.display="flex";
-document.getElementById('closeCommittee').onclick=()=> document.getElementById('committeeModal').style.display="none";
-
-// Logout & downloads
-document.getElementById('menuLogout').onclick=()=> {
-  firebase.auth().signOut().then(()=>{ localStorage.removeItem('user'); location.reload(); });
+// Committee Modal
+document.getElementById('menuCommittee').onclick = () => {
+  document.getElementById('committeeModal').style.display = 'flex';
 };
-document.getElementById('menuDownloadCSV').onclick=()=> downloadCsvPrompt();
-document.getElementById('menuDownloadPDF').onclick=()=> downloadPdf();
+document.getElementById('closeCommittee').onclick = () => {
+  document.getElementById('committeeModal').style.display = 'none';
+};
 
-// Initialize main page
+// Tabs
+const tabMember=document.getElementById('tabMember');
+const tabExpense=document.getElementById('tabExpense');
+let currentTab=null; 
+
+tabMember.onclick=()=>{ currentTab='member'; tabMember.classList.add('active'); tabExpense.classList.remove('active'); };
+tabExpense.onclick=()=>{ currentTab='expense'; tabExpense.classList.add('active'); tabMember.classList.remove('active'); };
+
+// Main Page Logic
 function initMainPage(){
   const rowsContainer=document.getElementById('rows');
   const form=document.getElementById('fundForm');
   const monthTotalEl=document.getElementById('monthTotal');
   const grandTotalEl=document.getElementById('grandTotal');
+  const totalExpensesEl=document.getElementById('totalExpenses');
+  const currentFundsEl=document.getElementById('currentFunds');
+
+  function renderRows(){ rowsContainer.innerHTML=''; }
 
   function addRow(){
-    const div=document.createElement('div');
-    div.classList.add('row');
-    div.innerHTML=`
-      <label>Date:</label><input type="date" class="date" required>
-      <label>Member Name:</label><input type="text" class="member" required>
+    if(!currentTab) return;
+    const div=document.createElement('div'); div.classList.add('row');
+    if(currentTab==='member'){
+      div.innerHTML=`<label>Date:</label><input type="date" class="date" required>
+      <label>Member Name:</label><input type="text" class="name" required>
       <label>Amount:</label><input type="number" class="amount" required>
       <label>Receiver:</label><input type="text" class="receiver" required>
-      <button type="button" class="remove-btn" onclick="removeRow(this)">×</button>
-    `;
+      <button type="button" class="remove-btn" onclick="removeRow(this)">×</button>`;
+    } else if(currentTab==='expense') {
+      div.innerHTML=`<label>Date:</label><input type="date" class="date" required>
+      <label>Purpose:</label><input type="text" class="purpose" required>
+      <label>Amount:</label><input type="number" class="amount" required>
+      <button type="button" class="remove-btn" onclick="removeRow(this)">×</button>`;
+    }
     rowsContainer.appendChild(div);
   }
-  document.getElementById('addRowBtn').addEventListener('click', addRow);
-  addRow();
   window.removeRow=function(button){ button.parentElement.remove(); };
+  document.getElementById('addRowBtn').addEventListener('click', addRow);
 
   form.addEventListener('submit',function(e){
     e.preventDefault();
+    if(!currentTab){ alert("⚠️ Please select a tab first."); return; }
     const rows=document.querySelectorAll('.row');
     rows.forEach(row=>{
-      const date=row.querySelector('.date').value;
-      const member=row.querySelector('.member').value;
-      const amount=row.querySelector('.amount').value;
-      const receiver=row.querySelector('.receiver').value;
-      db.ref('funds').push({date, member, amount, receiver});
+      const date=row.querySelector('.date').value; const amount=row.querySelector('.amount').value;
+      if(currentTab==='member'){
+        const name=row.querySelector('.name').value; const receiver=row.querySelector('.receiver').value;
+        db.ref('funds').push({date,name,amount,receiver});
+      } else {
+        const purpose=row.querySelector('.purpose').value;
+        db.ref('expenses').push({date,purpose,amount});
+      }
     });
-    alert('✅ All data saved successfully!');
-    rowsContainer.innerHTML='';
-    addRow();
-    updateTotals();
+    alert('✅ Data saved successfully!'); renderRows(); updateTotals();
   });
 
   function updateTotals(){
-    db.ref('funds').once('value',snapshot=>{
-      const data=snapshot.val();
-      if(!data) return;
-      let grandTotal=0, monthTotal=0;
-      const now=new Date();
-      const thisMonth=now.getMonth()+1;
-      const thisYear=now.getFullYear();
-      for(let key in data){
-        const row=data[key];
-        const amount=parseFloat(row.amount)||0;
-        grandTotal+=amount;
-        const d=new Date(row.date);
-        if(d.getMonth()+1===thisMonth && d.getFullYear()===thisYear) monthTotal+=amount;
-      }
-      monthTotalEl.textContent=monthTotal;
-      grandTotalEl.textContent=grandTotal;
+    db.ref('funds').once('value',fundSnap=>{
+      db.ref('expenses').once('value',expSnap=>{
+        const fundData=fundSnap.val()||{}; const expData=expSnap.val()||{};
+        let monthTotal=0, grandTotal=0, totalExp=0;
+        const now=new Date(), thisMonth=now.getMonth()+1, thisYear=now.getFullYear();
+        for(let key in fundData){ const r=fundData[key]; const amt=parseFloat(r.amount)||0; grandTotal+=amt; const d=new Date(r.date); if(d.getMonth()+1===thisMonth && d.getFullYear()===thisYear) monthTotal+=amt; }
+        for(let key in expData){ totalExp+=parseFloat(expData[key].amount)||0; }
+        monthTotalEl.textContent=monthTotal;
+        grandTotalEl.textContent=grandTotal;
+        totalExpensesEl.textContent=totalExp;
+        currentFundsEl.textContent=grandTotal-totalExp;
+      });
     });
   }
-
   updateTotals();
-}
 
-// CSV download with password
-function downloadCsvPrompt(){
-  const pwd=prompt("Enter password to download CSV:");
-  if(pwd!==CSV_PASSWORD){ alert("❌ Incorrect password"); return; }
+  // CSV & PDF logic remains unchanged...
 
-  db.ref('funds').once('value',snapshot=>{
-    const data=snapshot.val();
-    if(!data){ alert("No records found."); return; }
-    let csv="ID,DATE,MEMBER,AMOUNT,RECEIVER\n";
-    let id=1, grandTotal=0;
-    for(let key in data){
-      const row=data[key];
-      csv+=`${id},${row.date},${row.member},${row.amount},${row.receiver}\n`;
-      grandTotal+=parseFloat(row.amount)||0;
-      id++;
-    }
-    csv+=`Grand Total:,${grandTotal}\n`;
-    const blob=new Blob([csv],{type:'text/csv'});
-    const url=window.URL.createObjectURL(blob);
-    const a=document.createElement('a'); a.href=url; a.download='jamiyat_funds.csv';
-    document.body.appendChild(a); a.click(); document.body.removeChild(a);
-  });
-}
+// 📥 CSV Download (Month-wise Funds → Expenses → Monthly totals)
+document.getElementById('menuDownloadCSV').onclick = () => {
+  const pwd = prompt("Enter password:");
+  if(pwd !== CSV_PASSWORD){ alert("❌ Incorrect password"); return; }
 
-// PDF download with password & proper table
-function downloadPdf(){
-  const pwd=prompt("Enter password to download PDF:");
-  if(pwd!==CSV_PASSWORD){ alert("❌ Incorrect password"); return; }
+  db.ref('funds').once('value', fundSnap => {
+    db.ref('expenses').once('value', expSnap => {
+      const fundsData = fundSnap.val() || {};
+      const expData = expSnap.val() || {};
+      let csv = "";
+      let grandTotalFunds = 0, grandTotalExp = 0;
 
-  db.ref('funds').once('value',snapshot=>{
-    const data=snapshot.val();
-    if(!data){ alert("No records found."); return; }
+      function getMonthYear(date){
+        const d = new Date(date);
+        return d.toLocaleString('default', {month:'long', year:'numeric'});
+      }
 
-    const div=document.createElement('div');
-    div.style.padding="20px";
-    div.style.fontSize="14px";
-    div.style.color="#000";
-    div.style.background="#fff";
+      // Group funds by month
+      const fundGroups = {};
+      for(let key in fundsData){
+        const r = fundsData[key];
+        const k = getMonthYear(r.date);
+        if(!fundGroups[k]) fundGroups[k] = [];
+        fundGroups[k].push(r);
+      }
 
-    const title=document.createElement('h3');
-    title.innerText="Jamiyat Funds Collection";
-    title.style.textAlign="center";
-    div.appendChild(title);
+      // Group expenses by month
+      const expGroups = {};
+      for(let key in expData){
+        const r = expData[key];
+        const k = getMonthYear(r.date);
+        if(!expGroups[k]) expGroups[k] = [];
+        expGroups[k].push(r);
+      }
 
-    const table=document.createElement('table');
-    table.style.width="100%";
-    table.style.borderCollapse="collapse";
-    table.style.marginTop="10px";
+      const allMonths = Array.from(new Set([...Object.keys(fundGroups), ...Object.keys(expGroups)]));
 
-    const headerRow=document.createElement('tr');
-    ["ID","Date","Member","Amount","Receiver"].forEach(h=>{
-      const th=document.createElement('th');
-      th.innerText=h;
-      th.style.border="1px solid #000";
-      th.style.padding="5px";
-      th.style.background="#ffd700";
-      headerRow.appendChild(th);
-    });
-    table.appendChild(headerRow);
+      allMonths.forEach(month => {
+        // Month Funds
+        csv += `\n*** ${month} Funds ***\nID,DATE,NAME,AMOUNT,RECEIVER\n`;
+        let monthFundTotal = 0, id=1;
+        (fundGroups[month] || []).forEach(r => {
+          csv += `${id},${r.date},${r.name},${r.amount},${r.receiver}\n`;
+          monthFundTotal += parseFloat(r.amount)||0;
+          id++;
+        });
+        csv += `Total Funds ${month},${monthFundTotal}\n`;
+        grandTotalFunds += monthFundTotal;
 
-    let id=1, total=0;
-    for(let key in data){
-      const row=data[key];
-      const tr=document.createElement('tr');
-      [id,row.date,row.member,row.amount,row.receiver].forEach(val=>{
-        const td=document.createElement('td');
-        td.innerText=val;
-        td.style.border="1px solid #000";
-        td.style.padding="5px";
-        tr.appendChild(td);
+        // Month Expenses
+        csv += `\n*** ${month} Expenses ***\nID,DATE,PURPOSE,AMOUNT\n`;
+        let monthExpTotal = 0; id=1;
+        (expGroups[month] || []).forEach(r => {
+          csv += `${id},${r.date},${r.purpose},${r.amount}\n`;
+          monthExpTotal += parseFloat(r.amount)||0;
+          id++;
+        });
+        csv += `Total Expenses ${month},${monthExpTotal}\n`;
+        grandTotalExp += monthExpTotal;
       });
-      total+=parseFloat(row.amount)||0;
-      table.appendChild(tr);
-      id++;
-    }
 
-    const trTotal=document.createElement('tr');
-    ["","","Total",total,""].forEach(val=>{
-      const td=document.createElement('td');
-      td.innerText=val;
-      td.style.border="1px solid #000";
-      td.style.fontWeight=(val==="Total" || val===total)?"bold":"normal";
-      td.style.padding="5px";
-      trTotal.appendChild(td);
+      const finalAmount = grandTotalFunds - grandTotalExp;
+      csv += `\n💵 Final Amount After All Months:,${finalAmount}\n`;
+
+      const blob = new Blob([csv], {type:'text/csv'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'funds_expenses.csv';
+      a.click();
     });
-    table.appendChild(trTotal);
-    div.appendChild(table);
-
-    html2pdf().from(div).save("jamiyat_funds.pdf");
   });
+};
+
+// 📥 PDF Download (Month-wise Funds → Expenses → Monthly totals)
+document.getElementById('menuDownloadPDF').onclick = () => {
+  const pwd = prompt("Enter password:");
+  if(pwd !== CSV_PASSWORD){ alert("❌ Incorrect password"); return; }
+
+  db.ref('funds').once('value', fundSnap => {
+    db.ref('expenses').once('value', expSnap => {
+      const fundsData = fundSnap.val() || {};
+      const expData = expSnap.val() || {};
+      const div = document.createElement('div');
+      div.style.padding = "10px"; div.style.background = "#fff"; div.style.color = "#000";
+
+      const title = document.createElement('h2');
+      title.innerText = "Markaz Funds Collection";
+      title.style.textAlign = "center";
+      div.appendChild(title);
+
+      function getMonthYear(date){
+        const d = new Date(date);
+        return d.toLocaleString('default',{month:'long',year:'numeric'});
+      }
+
+      const fundGroups = {}, expGroups = {};
+      for(let key in fundsData){
+        const r = fundsData[key]; const k = getMonthYear(r.date);
+        if(!fundGroups[k]) fundGroups[k] = [];
+        fundGroups[k].push(r);
+      }
+      for(let key in expData){
+        const r = expData[key]; const k = getMonthYear(r.date);
+        if(!expGroups[k]) expGroups[k] = [];
+        expGroups[k].push(r);
+      }
+
+      let grandTotalFunds=0, grandTotalExp=0;
+      const allMonths = Array.from(new Set([...Object.keys(fundGroups), ...Object.keys(expGroups)]));
+
+      allMonths.forEach(month => {
+        // Month Funds
+        const h = document.createElement('h3'); h.innerText = `${month} Funds`; h.style.color="#d4af37"; h.style.textAlign="center"; div.appendChild(h);
+        const tblF = document.createElement('table'); tblF.style.width="100%"; tblF.style.borderCollapse="collapse";
+        const headerF = document.createElement('tr');
+        ["ID","Date","Name","Amount","Receiver"].forEach(hd=>{
+          const th = document.createElement('th'); th.innerText=hd; th.style.border="1px solid #000"; th.style.padding="5px"; th.style.background="#ffd700"; headerF.appendChild(th);
+        }); tblF.appendChild(headerF);
+        let monthFundTotal=0,id=1;
+        (fundGroups[month] || []).forEach(r=>{
+          const tr=document.createElement('tr');
+          [id,r.date,r.name,r.amount,r.receiver].forEach(v=>{
+            const td=document.createElement('td'); td.innerText=v; td.style.border="1px solid #000"; td.style.padding="5px"; tr.appendChild(td);
+          });
+          tblF.appendChild(tr); monthFundTotal+=parseFloat(r.amount)||0; id++;
+        });
+        const trTotal = document.createElement('tr');
+        const tdTotal = document.createElement('td'); tdTotal.colSpan=5; tdTotal.innerText=`Total Funds ${month}: ${monthFundTotal}`; tdTotal.style.fontWeight="bold"; trTotal.appendChild(tdTotal); tblF.appendChild(trTotal);
+        div.appendChild(tblF);
+        grandTotalFunds += monthFundTotal;
+
+        // Month Expenses
+        const hE = document.createElement('h3'); hE.innerText = `${month} Expenses`; hE.style.color="#d4af37"; hE.style.textAlign="center"; div.appendChild(hE);
+        const tblE = document.createElement('table'); tblE.style.width="100%"; tblE.style.borderCollapse="collapse";
+        const headerE = document.createElement('tr');
+        ["ID","Date","Purpose","Amount"].forEach(hd=>{
+          const th = document.createElement('th'); th.innerText=hd; th.style.border="1px solid #000"; th.style.padding="5px"; th.style.background="#ffd700"; headerE.appendChild(th);
+        }); tblE.appendChild(headerE);
+        let monthExpTotal=0; id=1;
+        (expGroups[month] || []).forEach(r=>{
+          const tr=document.createElement('tr');
+          [id,r.date,r.purpose,r.amount].forEach(v=>{
+            const td=document.createElement('td'); td.innerText=v; td.style.border="1px solid #000"; td.style.padding="5px"; tr.appendChild(td);
+          });
+          tblE.appendChild(tr); monthExpTotal+=parseFloat(r.amount)||0; id++;
+        });
+        const trTotalE = document.createElement('tr');
+        const tdTotalE = document.createElement('td'); tdTotalE.colSpan=4; tdTotalE.innerText=`Total Expenses ${month}: ${monthExpTotal}`; tdTotalE.style.fontWeight="bold"; trTotalE.appendChild(tdTotalE); tblE.appendChild(trTotalE);
+        div.appendChild(tblE);
+        grandTotalExp += monthExpTotal;
+      });
+
+      const finalDiv = document.createElement('div');
+      finalDiv.innerText = `💵  Final Amount We Have: ${grandTotalFunds - grandTotalExp} ₹`;
+      finalDiv.style.color="green"; finalDiv.style.fontWeight="bold"; finalDiv.style.marginTop="10px"; finalDiv.style.fontSize="18px";
+      div.appendChild(finalDiv);
+
+      html2pdf().from(div).save('funds_expenses.pdf');
+    });
+  });
+};
+
+
 }
 </script>
 </body>
